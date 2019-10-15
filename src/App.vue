@@ -174,9 +174,9 @@
   }
 
   a:active, a:hover, a {
-    outline: 0;
-    text-decoration: none;
-    color: #0C2134;
+    outline: 0 !important;
+    text-decoration: none !important;
+    color: #0C2134 !important;
   }
 
   .navbar .item-selected {
@@ -307,14 +307,14 @@
     border: none;
     padding: 10px 30px;
     margin-top: 22px;
-    color: #FFF;
+    color: #FFF !important;
     cursor: pointer;
-    outline: none;
   }
 
   .button-primary:active, .button-primary:hover {
-    color: #FFF;
+    color: #FFF !important;
   }
+
   @media only screen and (max-width: 390px) {
     .intro-box {
       margin-top: -21px !important;
