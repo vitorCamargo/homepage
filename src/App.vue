@@ -278,7 +278,7 @@
     padding-bottom: 150px;
     margin-top: 80px;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
   }
 
   .intro-box {
@@ -287,6 +287,7 @@
     margin-top: auto;
     margin-bottom: auto;
     text-align: center;
+    margin-left: 50px;
   }
 
   .info-title {
