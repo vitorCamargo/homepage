@@ -57,7 +57,7 @@
     <div ref = "aboutMe" id = "aboutMe" style = "padding: 100px; display: flex; justify-content: space-around;">
       <div class = "aboutMe-title"> {{ lang === 'en' ? 'About Me' : 'Sobre mim' }} </div>
 
-      <div style = "max-width: 600px;">
+      <div class = "aboutMe-content">
         <p class = "aboutMe-text" v-if = "lang === 'en'">
           I am a student of <span style = "font-weight: 500">Computer Science</span> at the Federal Technological University of Paraná (UTFPR). I learned to enjoy the area during my high school computer technician, where I developed copied Wix websites and sold to my classmates who hadn’t done the lessons. In it I learned the basics of web design and development for web, mobile and desktop.
         </p>
@@ -384,6 +384,10 @@
     letter-spacing: 0.03em;
   }
 
+  .aboutMe-content {
+    max-width: 500px;
+  }
+
   .aboutMe-text {
     font-weight: 300;
     font-size: 13px;
@@ -424,6 +428,10 @@
     .intro-box {
       margin-top: -21px !important;
     }
+
+    .aboutMe-content a {
+      font-size: 10px;
+    }
   }
 
   @media only screen and (max-width: 460px) {
@@ -457,6 +465,21 @@
       margin-right: auto;
       margin-top: -28px;
       margin-bottom: -30px;
+    }
+
+    #aboutMe {
+      padding: 40px !important;
+      display: block !important;
+    }
+
+    .aboutMe-content {
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 25px;
+    }
+
+    .aboutMe-content .button-secondary {
+      margin-left: 10px !important;
     }
   }
 </style>
