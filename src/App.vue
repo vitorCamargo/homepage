@@ -54,8 +54,34 @@
       </div>
     </div>
 
-    <div ref = "aboutMe" id = "aboutMe" style = "padding-top: 700px; height: 100px;">kkk</div>
-    <div ref = "skills" id = "skills" style = "padding-top: 700px; height: 100px;">kkk</div>
+    <div ref = "aboutMe" id = "aboutMe" style = "padding: 100px; display: flex; justify-content: space-around;">
+      <div class = "aboutMe-title"> {{ lang === 'en' ? 'About Me' : 'Sobre mim' }} </div>
+
+      <div style = "max-width: 600px;">
+        <p class = "aboutMe-text" v-if = "lang === 'en'">
+          I am a student of <span style = "font-weight: 500">Computer Science</span> at the Federal Technological University of Paraná (UTFPR). I learned to enjoy the area during my high school computer technician, where I developed copied Wix websites and sold to my classmates who hadn’t done the lessons. In it I learned the basics of web design and development for web, mobile and desktop.
+        </p>
+
+        <p class = "aboutMe-text" v-else>
+          Sou estudante de <span style = "font-weight: 500">Ciência da Computação</span> na Universidade Tecnológica Federal do Paraná (UTFPR). Aprendi a amar a área de tecnologia durante o meu técnico de informática no ensino médio, onde desenvolvia sites copiados do Wix e vendia para meus colegas que não haviam feito as lições. No técnico, aprendi o básico de web design e desenvolvimento para web, mobile e desktop.
+        </p>
+
+        <div style = "display: flex; justify-content: center;">
+          <a href = "#portfolio" class = "button-primary"> {{ lang === 'en' ? 'Download CV' : 'Baixar CV' }} </a>
+          <a href = "#portfolio" class = "button-secondary" style = "margin-left: 40px;">
+            <span> {{ lang === 'en' ? 'View Lattes' : 'Ver Lattes' }} </span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div ref = "skills" id = "skills" style = "background: #F5F5F5; padding: 40px 100px;">
+      <div class = "skills-title">
+        <p> {{ lang === 'en' ? 'My Skills' : 'Habilidades' }} </p>
+        <p class = "subtitle"> {{ lang === 'en' ? 'Programming Languages and Technologies' : 'Linguagens de Programação e Tecnologias' }} </p>
+      </div>
+    </div>
+
     <div ref = "portfolio" id = "portfolio" style = "padding-top: 700px; height: 100px;">kkk</div>
     <div ref = "footer" id = "footer" style = "padding-top: 700px; height: 100px;">kkk</div>
   </div>
@@ -312,8 +338,86 @@
     cursor: pointer;
   }
 
+  .button-secondary {
+    position: relative;
+    border-radius: 105px;
+    padding: 7px 27px;
+    margin-top: 23.5px;
+    cursor: pointer;
+    background: #FFF;
+  }
+
+  .button-secondary span {
+    background: linear-gradient(287.37deg, #404DE6 -20.96%, #72E9F3 125.08%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 500;
+    vertical-align: middle;
+  }
+
+  .button-secondary::after {
+    position: absolute;
+    top: -1.5px;
+    bottom: -1.5px;
+    left: -1.5px;
+    right: -1.5px;
+    background: linear-gradient(287.37deg, #404DE6 -20.96%, #72E9F3 125.08%);
+    content: '';
+    z-index: -1;
+    border-radius: 115px;
+}
+
   .button-primary:active, .button-primary:hover {
     color: #FFF !important;
+  }
+
+  .aboutMe-title {
+    font-weight: bold;
+    background: url(assets/effect-1.svg);
+    height: 93px;
+    padding-top: 12px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding-left: 35px;
+    font-size: 31px;
+    color: #0C2134;
+    letter-spacing: 0.03em;
+  }
+
+  .aboutMe-text {
+    font-weight: 300;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    color: #666666;
+    font-weight: 100;
+  }
+  
+  .skills-title {
+    text-align: center;
+    padding-top: 38px;
+    background: url(assets/effect-2.svg);
+    background-size: auto 113px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-position-y: top;
+    font-weight: bold;
+    font-size: 31px;
+    letter-spacing: 0.03em;
+    width: 340px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .skills-title p {
+    margin-bottom: 0;
+  }
+
+  .skills-title p.subtitle {
+    font-weight: 300;
+    font-size: 18px;
+    letter-spacing: 0.03em;
+    color: #666666;
+    font-weight: 100;
   }
 
   @media only screen and (max-width: 390px) {
