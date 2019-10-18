@@ -80,6 +80,10 @@
         <p> {{ lang === 'en' ? 'My Skills' : 'Habilidades' }} </p>
         <p class = "subtitle"> {{ lang === 'en' ? 'Programming Languages and Technologies' : 'Linguagens de Programação e Tecnologias' }} </p>
       </div>
+
+      <div class = "skills-content">
+        <img src = "./assets/skills.png" style = "width: 100%;" />
+      </div>
     </div>
 
     <div ref = "portfolio" id = "portfolio" style = "padding-top: 700px; height: 100px;">kkk</div>
@@ -407,7 +411,7 @@
     font-weight: bold;
     font-size: 31px;
     letter-spacing: 0.03em;
-    width: 340px;
+    max-width: 340px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -422,6 +426,11 @@
     letter-spacing: 0.03em;
     color: #666666;
     font-weight: 100;
+  }
+
+  .skills-content {
+    max-width: 800px;
+    margin: 70px auto 40px;
   }
 
   @media only screen and (max-width: 390px) {
@@ -451,6 +460,14 @@
 
     .mobile-menu-on {
       display: block;
+    }
+
+    #skills {
+      padding: 40px 20px !important;
+    }
+
+    .skills-content {
+      margin: 30px auto 10px !important;
     }
   }
 
