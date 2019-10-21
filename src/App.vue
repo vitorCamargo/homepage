@@ -238,7 +238,7 @@
         currentSlide: 0,
         intervalSlide: '',
         loading: true,
-        visibleContactModal: true,
+        visibleContactModal: false,
         confirmContactModalLoading: false
       }
     },
