@@ -575,7 +575,7 @@
 
   .aboutMe-title, .portfolio-title {
     font-weight: bold;
-    background: url(assets/effect-1.svg);
+    background: url(./assets/effect-1.svg);
     height: 93px;
     padding-top: 12px;
     background-size: contain;
@@ -601,7 +601,7 @@
   .skills-title {
     text-align: center;
     padding-top: 38px;
-    background: url(assets/effect-2.svg);
+    background: url(./assets/effect-2.svg);
     background-size: auto 113px;
     background-repeat: no-repeat;
     background-position: center;
@@ -740,7 +740,7 @@
   }
 
   .contact-modal .ant-modal-body {
-    background: url(assets/background-contact.png);
+    background: url(./assets/background-contact.png);
     background-repeat: no-repeat;
     background-size: 100%;
     padding-top: 100px;
