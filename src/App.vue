@@ -159,7 +159,39 @@
       </div>
     </div>
 
-    <div ref = "footer" id = "footer" style = "padding-top: 700px; height: 100px;">kkk</div>
+    <div ref = "footer" id = "footer" style = "margin-top: 70px; margin-bottom: 20px; text-align: center; padding: 0 20px;">
+      <p class = "footer-title">
+        {{ lang === 'en' ? 'Interested in my work?' : 'Interressado no meu trabalho?' }}
+      </p>
+
+      <a href = "#portfolio" class = "button-primary"> {{ lang === 'en' ? 'CONTACT ME' : 'CONTATE ME' }} </a>
+
+      <div class = "footer-divider"></div>
+
+      <div style = "display: flex; justify-content: center;">
+        <a href = "https://www.facebook.com/vitorbueno.camargo" target = "_blank" class = "footer-buttons" style = "background-color: #3C599B;">
+          <img src = "./assets/facebook-icon.svg" class = "footer-img-icon" />
+        </a>
+
+        <a href = "https://www.linkedin.com/in/vitor-bueno-de-camargo-b32195196/" target = "_blank" class = "footer-buttons" style = "background-color: #107AB6;">
+          <img src = "./assets/linkedin-icon.svg" class = "footer-img-icon" />
+        </a>
+
+        <a href = "https://www.github.com/vitorCamargo" target = "_blank" class = "footer-buttons" style = "background-color: #0C2134;">
+          <img src = "./assets/github-white-icon.svg" class = "footer-img-icon" />
+        </a>
+
+        <a href = "mailto:vitorcamargo@alunos.utfpr.edu.br" target = "_blank" class = "footer-buttons" style = "background-color: #DB4437;">
+          <img src = "./assets/gmail-icon.svg" class = "footer-img-icon" />
+        </a>
+
+        <a href = "https://www.instagram.com/_vitorcamargo_/" target = "_blank" class = "footer-buttons instagram-background">
+          <img src = "./assets/instagram-icon.svg" class = "footer-img-icon" />
+        </a>
+      </div>
+
+      <p class = "footer-copyright"> © 2019. <span style = "font-style: italic; font-weight: 600;"> Vitor Camargo </span> </p>
+    </div>
   </div>
 </template>
 
@@ -609,6 +641,45 @@
     bottom: -13px;
   }
 
+  .footer-title {
+    font-weight: bold;
+    font-size: 34px;
+    text-align: center;
+    letter-spacing: 0.03em;
+    margin-bottom: 20px;
+  }
+
+  .footer-divider {
+    border-bottom: 1px solid #0C21345B;
+    width: 70%;
+    margin: 50px auto;
+  }
+
+  .footer-buttons {
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    margin: 0 5px;
+  }
+
+  .footer-img-icon {
+    padding: 9px;
+    width: 100%;
+    height: 100%;
+  }
+
+  .instagram-background {
+    background: radial-gradient(circle farthest-corner at 35% 90%,#fec564,transparent 50%),radial-gradient(circle farthest-corner at 0 140%,#fec564,transparent 50%),radial-gradient(ellipse farthest-corner at 0 -25%,#5258cf,transparent 50%),radial-gradient(ellipse farthest-corner at 20% -50%,#5258cf,transparent 50%),radial-gradient(ellipse farthest-corner at 100% 0,#893dc2,transparent 50%),radial-gradient(ellipse farthest-corner at 60% -20%,#893dc2,transparent 50%),radial-gradient(ellipse farthest-corner at 100% 100%,#d9317a,transparent),linear-gradient(#6559ca,#bc318f 30%,#e33f5f 50%,#f77638 70%,#fec66d 100%);
+  }
+
+  .footer-copyright {
+    font-weight: 400;
+    font-size: 12px;
+    text-align: center;
+    letter-spacing: 0.03em;
+    margin-top: 20px;
+  }
+
   @media only screen and (max-width: 1390px) {
     .slide-desktop {
       height: 330px;
@@ -661,6 +732,10 @@
 
     .slide-mobile {
       height: 150px !important;
+    }
+    
+    .footer-title {
+      font-size: 23px;
     }
   }
 
