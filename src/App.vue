@@ -12,7 +12,7 @@
             <div v-bind:class = "scrollPage === 'aboutMe' ? 'item-selected' : 'item'"> <a href = "#aboutMe"> {{ lang === 'en' ? 'About me' : 'Sobre' }} </a> </div>
             <div v-bind:class = "scrollPage === 'skills' ? 'item-selected' : 'item'"> <a href = "#skills"> {{ lang === 'en' ? 'Skills' : 'Habilidades' }} </a> </div>
             <div v-bind:class = "scrollPage === 'portfolio' ? 'item-selected' : 'item'"> <a href = "#portfolio"> {{ lang === 'en' ? 'Portfolio' : 'Portifólio' }} </a> </div>
-            <div v-bind:class = "scrollPage === 'contact' ? 'item-selected' : 'item'"> <a> {{ lang === 'en' ? 'Contact' : 'Contato' }} </a> </div>
+            <div v-bind:class = "scrollPage === 'contact' ? 'item-selected' : 'item'"> <a @click = "openContactModal"> {{ lang === 'en' ? 'Contact' : 'Contato' }} </a> </div>
           </div>
 
           <div class = "language mobile-menu" @mouseover = "languageDropdownVisible = true" @mouseleave = "languageDropdownVisible = false">
@@ -67,8 +67,8 @@
         </p>
 
         <div style = "display: flex; justify-content: center;">
-          <a href = "#portfolio" class = "button-primary"> {{ lang === 'en' ? 'Download CV' : 'Baixar CV' }} </a>
-          <a href = "#portfolio" class = "button-secondary" style = "margin-left: 40px;">
+          <a href = "./assets/CV.pdf" download class = "button-primary"> {{ lang === 'en' ? 'Download CV' : 'Baixar CV' }} </a>
+          <a href = "http://lattes.cnpq.br/0312842857318967" target = "_blank" class = "button-secondary" style = "margin-left: 40px;">
             <span> {{ lang === 'en' ? 'View Lattes' : 'Ver Lattes' }} </span>
           </a>
         </div>
@@ -164,7 +164,7 @@
         {{ lang === 'en' ? 'Interested in my work?' : 'Interressado no meu trabalho?' }}
       </p>
 
-      <a href = "#portfolio" class = "button-primary"> {{ lang === 'en' ? 'CONTACT ME' : 'CONTATE ME' }} </a>
+      <a @click = "openContactModal" class = "button-primary"> {{ lang === 'en' ? 'CONTACT ME' : 'CONTATE ME' }} </a>
 
       <div class = "footer-divider"></div>
 
@@ -192,6 +192,36 @@
 
       <p class = "footer-copyright"> © 2019. <span style = "font-style: italic; font-weight: 600;"> Vitor Camargo </span> </p>
     </div>
+
+    <a-modal class = "contact-modal" :visible = "visibleContactModal" @cancel = "visibleContactModal = false" :footer = "null">
+      <a-spin :spinning = "confirmContactModalLoading">
+        <p style = "font-weight: 600; font-size: 35px; color: #0C2134; text-align: center; margin-bottom: 0;"> {{ lang === 'en' ? 'Contact me' : 'Contate me' }} </p>
+
+        <p style = "text-align: center;"> {{ lang === 'en' ? 'I will get back to you within one to two days through email. Also please do not forget to check your spam account just in case!' : 'Eu retornarei o contato com um ou dois dias atrvés do email. Por favor, não se esqueça de checar seu spam.' }} </p>
+
+        <a-form :autoFormCreate = "(form) => { this.form = form }">
+          <a-form-item class = "input-contact-form" fieldDecoratorId = "name" v-bind:fieldDecoratorOptions = "{ rules: [{ required: true, message: lang === 'en' ? 'Field Required' : 'Campo Obrigatório' }] }">
+            <a-input size = "large" v-bind:placeholder = "lang === 'en' ? 'Name' : 'Nome'" />
+          </a-form-item>
+
+          <a-form-item class = "input-contact-form" fieldDecoratorId = "email" v-bind:fieldDecoratorOptions = "{ rules: [{ required: true, message: lang === 'en' ? 'Field Required' : 'Campo Obrigatório' }, { type: 'email', message: lang === 'en' ? 'Email Invalid' : 'E-mail Inválido' }] }">
+            <a-input size = "large" v-bind:placeholder = "lang === 'en' ? 'Email' : 'E-mail'" />
+          </a-form-item>
+
+          <a-form-item class = "input-contact-form" fieldDecoratorId = "subject" v-bind:fieldDecoratorOptions = "{ rules: [{ required: true, message: lang === 'en' ? 'Field Required' : 'Campo Obrigatório' }] }">
+            <a-input size = "large" v-bind:placeholder = "lang === 'en' ? 'Subject' : 'Assunto'" />
+          </a-form-item>
+
+          <a-form-item class = "input-contact-form" fieldDecoratorId = "message" v-bind:fieldDecoratorOptions = "{ rules: [{ required: true, message: lang === 'en' ? 'Field Required' : 'Campo Obrigatório' }] }">
+            <a-textarea v-bind:placeholder = "lang === 'en' ? 'Message' : 'Mensagem'" :rows = "4" />
+          </a-form-item>
+
+          <div style = "display: flex; justify-content: flex-end;">
+            <a @click = "sendContactMessage" class = "button-primary"> {{ lang === 'en' ? 'Send' : 'Enviar' }} </a>
+          </div>
+        </a-form>
+      </a-spin>
+    </a-modal>
   </div>
 </template>
 
@@ -207,7 +237,9 @@
         projects: [],
         currentSlide: 0,
         intervalSlide: '',
-        loading: true
+        loading: true,
+        visibleContactModal: true,
+        confirmContactModalLoading: false
       }
     },
     created() {
@@ -263,6 +295,33 @@
         } else {
           this.currentSlide = 0;
         }
+      },
+      openContactModal: function() {
+        this.visibleContactModal = true;
+        this.form.resetFields(['name', 'email', 'subject', 'message']);
+      },
+      sendContactMessage: function() {
+        let _this = this;
+        this.confirmContactModalLoading = true;
+
+        this.form.validateFields(async (err, values) => {
+          if (!err) {
+            const { name, email, subject, message } = values;
+            _this.$axios.post('https://api-v-homepage.herokuapp.com/api/messages', {
+              name, email, subject, message
+            }).then(res => {
+              _this.confirmContactModalLoading = false;
+              _this.visibleContactModal = false;
+
+              _this.$message.success(_this.lang == 'en' ? 'Your message was sent. Thank you!' : 'Sua mensagem foi enviada. Obrigado!');
+            }).catch(ex => {
+              _this.confirmContactModalLoading = false;
+
+              _this.$message.error(_this.lang == 'en' ? 'Your message wasn\'t sent. Try again.' : 'Sua mensagem não foi enviada. Tente novamente!');
+            });
+          }
+          _this.confirmContactModalLoading = false;
+        });
       }
     }
   }
@@ -650,7 +709,7 @@
   }
 
   .footer-divider {
-    border-bottom: 1px solid #0C21345B;
+    border-bottom: 0.5px solid #0C21345B;
     width: 70%;
     margin: 50px auto;
   }
@@ -678,6 +737,13 @@
     text-align: center;
     letter-spacing: 0.03em;
     margin-top: 20px;
+  }
+
+  .contact-modal .ant-modal-body {
+    background: url(assets/background-contact.png);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    padding-top: 100px;
   }
 
   @media only screen and (max-width: 1390px) {
