@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-affix :offsetTop = "-100" @change = "changeAffix">
+    <a-affix class = "noselect" :offsetTop = "-100" @change = "changeAffix">
       <div v-bind:class = "affixed ? 'menu-affixed' : 'menu'">
         <a href = "#">
           <img src = "./assets/logo.png" class = "menu-logo" />
@@ -86,7 +86,79 @@
       </div>
     </div>
 
-    <div ref = "portfolio" id = "portfolio" style = "padding-top: 700px; height: 100px;">kkk</div>
+    <div ref = "portfolio" id = "portfolio">
+      <div style = "margin: 40px 100px;" class = "portfolio-title"> {{ lang === 'en' ? 'My Portfolio' : 'Meu Portifolio' }} </div>
+
+      <img v-if = "loading" class = "loading" src = "./assets/loader.gif" />
+
+      <div v-else>
+        <div class = "portfolio-slide-control">
+          <div v-on:click = "prevSlide()">
+            <img src = "./assets/slide-left.svg" />
+            <span class = "noselect"> {{ lang === 'en' ? 'PREV' : 'ANTERIOR' }} </span>
+          </div>
+
+          <div v-on:click = "nextSlide()">
+            <span class = "noselect"> {{ lang === 'en' ? 'NEXT' : 'PRÓXIMO' }} </span>
+            <img src = "./assets/slide-right.svg" />
+          </div>
+        </div>
+
+        <div :style = "{ backgroundImage: `url(${projects[currentSlide].background})` }" class = "portfolio-slide-projects">
+          <div class = "portfolio-slide-title">
+            {{ lang === 'en' ? projects[currentSlide].name.en : projects[currentSlide].name.pt }}
+          </div>
+
+          <div v-if = "projects[currentSlide].links.github || projects[currentSlide].links.url || projects[currentSlide].links.googlePlay || projects[currentSlide].links.others.length > 0" class = "portfolio-slide-links">
+            <a v-if = "projects[currentSlide].links.github" target = "_blank" v-bind:href = "projects[currentSlide].links.github">
+              <img src = "./assets/github-icon.svg" />
+            </a>
+
+            <a v-if = "projects[currentSlide].links.url" target = "_blank" v-bind:href = "projects[currentSlide].links.url">
+              <img src = "./assets/web-icon.svg" />
+            </a>
+
+            <a v-if = "projects[currentSlide].links.googlePlay" target = "_blank" v-bind:href = "projects[currentSlide].links.googlePlay">
+              <img src = "./assets/googlePlay-icon.svg" />
+            </a>
+
+            <div v-if = "projects[currentSlide].links.others.length > 0">
+              <a v-for = "link in projects[currentSlide].links.others" v-bind:key = "link.url" target = "_blank" v-bind:href = "link.url">
+                <img v-bind:src = "link.image" />
+              </a>
+            </div>
+          </div>
+
+          <div class = "portfolio-details">
+            <div class = "portfolio-description-mobile" style = "display: none; max-width: 310px; text-align: center; font-weight: 500; font-size: 15px; letter-spacing: 0.03em; color: #FFFFFF; margin: 0 auto;">
+              <span>
+                {{ lang === 'en' ? projects[currentSlide].description.en : projects[currentSlide].description.pt }}
+              </span>
+            </div>
+
+            <div v-if = "projects[currentSlide].images.mobile && projects[currentSlide].images.desktop" style = "position: relative;">
+              <img class = "slide-desktop" v-bind:src = "projects[currentSlide].images.desktop" />
+              <img class = "slide-mobile" v-bind:src = "projects[currentSlide].images.mobile" />
+            </div>
+
+            <div v-else-if = "projects[currentSlide].images.desktop">
+              <img v-bind:src = "projects[currentSlide].images.desktop" />
+            </div>
+
+            <div v-else-if = "projects[currentSlide].images.mobile">
+              <img v-bind:src = "projects[currentSlide].images.mobile" />
+            </div>
+
+            <div class = "portfolio-description" style = "max-width: 310px; text-align: center; font-weight: 500; font-size: 15px; letter-spacing: 0.03em; color: #FFFFFF; margin: 0 auto;">
+              <span>
+                {{ lang === 'en' ? projects[currentSlide].description.en : projects[currentSlide].description.pt }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div ref = "footer" id = "footer" style = "padding-top: 700px; height: 100px;">kkk</div>
   </div>
 </template>
@@ -96,35 +168,69 @@
     name: 'Homepage',
     data() {
       return {
-        lang: 'pt',
+        lang: 'en',
         scrollPage: 'intro',
         languageDropdownVisible: false,
-        affixed: false
+        affixed: false,
+        projects: [],
+        currentSlide: 0,
+        intervalSlide: '',
+        loading: true
       }
     },
-    created () {
+    created() {
+      let _this = this
+      this.$axios.get('https://api-v-homepage.herokuapp.com/api/projects').then(res => {
+        _this.projects = res.data;
+        _this.slide(0);
+        _this.loading = false
+      });
+
       window.addEventListener('scroll', this.handleScroll);
     },
-    destroyed () {
+    beforeDestroy() {
+      clearInterval(this.intervalSlide);
+    },
+    destroyed() {
       window.removeEventListener('scroll', this.handleScroll);
     },
     methods: {
       changeAffix: function(affixed) {
-        this.affixed = affixed
+        this.affixed = affixed;
       },
       handleScroll: function(event) {
         if(window.scrollY >= this.$refs.intro.offsetTop && window.scrollY <= this.$refs.intro.offsetTop + this.$refs.intro.getBoundingClientRect().height) {
-          this.scrollPage = "intro"
+          this.scrollPage = "intro";
         }
         if(window.scrollY >= this.$refs.aboutMe.offsetTop && window.scrollY <= this.$refs.aboutMe.offsetTop + this.$refs.aboutMe.getBoundingClientRect().height) {
-          this.scrollPage = "aboutMe"
+          this.scrollPage = "aboutMe";
         }
         if(window.scrollY >= this.$refs.skills.offsetTop && window.scrollY <= this.$refs.skills.offsetTop + this.$refs.skills.getBoundingClientRect().height) {
-          this.scrollPage = "skills"
+          this.scrollPage = "skills";
         }
         if(window.scrollY >= this.$refs.portfolio.offsetTop && window.scrollY <= this.$refs.portfolio.offsetTop + this.$refs.portfolio.getBoundingClientRect().height) {
-          this.scrollPage = "portfolio"
+          this.scrollPage = "portfolio";
         } 
+      },
+      slide: function() {
+        let _this = this
+        this.intervalSlide = setInterval(() => {
+          _this.nextSlide();
+        }, 5000);
+      },
+      prevSlide: function() {
+        if(this.currentSlide > 0) {
+          this.currentSlide = this.currentSlide - 1;
+        } else {
+          this.currentSlide = this.projects.length - 1;
+        }
+      },
+      nextSlide: function() {
+        if(this.currentSlide < this.projects.length - 1) {
+          this.currentSlide = this.currentSlide + 1;
+        } else {
+          this.currentSlide = 0;
+        }
       }
     }
   }
@@ -354,6 +460,7 @@
   .button-secondary span {
     background: linear-gradient(287.37deg, #404DE6 -20.96%, #72E9F3 125.08%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 500;
     vertical-align: middle;
@@ -375,7 +482,7 @@
     color: #FFF !important;
   }
 
-  .aboutMe-title {
+  .aboutMe-title, .portfolio-title {
     font-weight: bold;
     background: url(assets/effect-1.svg);
     height: 93px;
@@ -433,41 +540,82 @@
     margin: 70px auto 40px;
   }
 
-  @media only screen and (max-width: 390px) {
-    .intro-box {
-      margin-top: -21px !important;
-    }
-
-    .aboutMe-content a {
-      font-size: 10px;
-    }
+  #portfolio img.loading {
+    display: block;
+    margin-top: 50px;
+    margin: 100px auto;
+    width: 85px;
   }
 
-  @media only screen and (max-width: 460px) {
-    .info-title {
-      font-size: 31px;
-    }
-
-    .info-subtitle {
-      font-size: 16px;
-    }
+  .portfolio-slide-projects {
+    background-size: 100% 100%;
   }
 
-  @media only screen and (max-width: 820px) {
-    .mobile-menu {
-      display: none !important;
+  .portfolio-slide-control {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .portfolio-slide-control div {
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    letter-spacing: 0.03em;
+    margin-right: 50px;
+    cursor: pointer;
+  }
+
+  .portfolio-slide-control div img {
+    height: 14px;
+    vertical-align: middle;
+  }
+
+  .portfolio-slide-title {
+    padding-top: 179px;
+    padding-left: 50px;
+    font-weight: 600;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.03em;
+    color: #FFFFFF;
+  }
+
+  .portfolio-slide-links {
+    margin-left: auto;
+    width: fit-content;
+    background: #FFF;
+    border-radius: 115px 0 0 115px;
+    padding: 10px 0 10px 25px;
+  }
+
+  .portfolio-details {
+    display: flex;
+  }
+
+  .portfolio-slide-links img {
+    height: 20px;
+    margin-right: 15px;
+  }
+
+  .slide-desktop {
+    height: 430px;
+  }
+
+  .slide-mobile {
+    height: 350px;
+    position: absolute;
+    right: 0;
+    bottom: -13px;
+  }
+
+  @media only screen and (max-width: 1390px) {
+    .slide-desktop {
+      height: 330px;
     }
 
-    .mobile-menu-on {
-      display: block;
-    }
-
-    #skills {
-      padding: 40px 20px !important;
-    }
-
-    .skills-content {
-      margin: 30px auto 10px !important;
+    .slide-mobile {
+      height: 250px;
     }
   }
 
@@ -489,6 +637,10 @@
       display: block !important;
     }
 
+    .portfolio-title {
+      margin: 40px !important;
+    }
+
     .aboutMe-content {
       margin-left: auto;
       margin-right: auto;
@@ -498,5 +650,115 @@
     .aboutMe-content .button-secondary {
       margin-left: 10px !important;
     }
+    
+    .portfolio-slide-title {
+      padding-top: 80px;
+    }
+
+    .slide-desktop {
+      height: 230px !important;
+    }
+
+    .slide-mobile {
+      height: 150px !important;
+    }
+  }
+
+  @media only screen and (max-width: 820px) {
+    .mobile-menu {
+      display: none !important;
+    }
+
+    .mobile-menu-on {
+      display: block;
+    }
+
+    #skills {
+      padding: 40px 20px !important;
+    }
+
+    .skills-content {
+      margin: 30px auto 10px !important;
+    }
+
+    .portfolio-slide-links {
+      margin-bottom: 50px;
+    }
+
+    .portfolio-details {
+      display: block;
+    }
+
+    .portfolio-description-mobile {
+      display: block !important;
+      margin-bottom: 40px !important;
+    }
+
+    .portfolio-description {
+      display: none !important;
+    }
+
+    .slide-mobile {
+      position: static !important;
+      vertical-align: bottom !important;
+      margin-left: -100px !important;
+    }
+  }
+
+  @media only screen and (max-width: 460px) {
+    .info-title {
+      font-size: 31px;
+    }
+
+    .info-subtitle {
+      font-size: 16px;
+    }
+
+    img.portfolio-slide-title {
+      padding-top: 49px;
+      font-size: 25px;
+    }
+
+    .slide-desktop {
+      height: 160px !important;
+    }
+
+    .portfolio-slide-title {
+      padding-top: 30px;
+      font-size: 22px;
+    }
+
+    .portfolio-slide-links {
+      margin-bottom: 20px;
+      margin-top: 20px;
+    }
+
+    .portfolio-description-mobile {
+      font-size: 12px;
+    }
+
+    .slide-mobile {
+      height: 110px !important;
+      margin-left: -90px !important;
+    }
+  }
+
+  @media only screen and (max-width: 390px) {
+    .intro-box {
+      margin-top: -21px !important;
+    }
+
+    .aboutMe-content a {
+      font-size: 10px;
+    }
+  }
+
+  .noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 </style>
