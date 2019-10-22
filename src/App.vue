@@ -740,7 +740,7 @@
   }
 
   .contact-modal .ant-modal-body {
-    background: url(./assets/background-contact.png);
+    background: #FFF url(./assets/background-contact.png);
     background-repeat: no-repeat;
     background-size: 100%;
     padding-top: 100px;
